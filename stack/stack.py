@@ -27,13 +27,16 @@ class Node:
 
 class LinkedList:
     def __init__(self):
+        self.size = 0
         self.head = None
         self.tail = None
 
     def is_empty(self):
-        return self.head == None and self.tail == None
+        return self.__len__() == 0
 
     def add_to_head(self, value):
+        self.size += 1
+
         new_node = Node(value)
 
         if self.is_empty():
@@ -46,7 +49,7 @@ class LinkedList:
             self.head = new_node
 
 
-    def add_to_tail(self, value):
+    def add_to_tail(self, value):        
         # 1. create the Node from the value 
         new_node = Node(value)
         # So, what do we do if tail is None? 
@@ -61,7 +64,7 @@ class LinkedList:
             # have both head and tail referring to the single node 
             self.head = new_node
             # set the new node to be the tail 
-            self.tail = new_node
+            self.tail = new_node        
         else:
             # These steps assume that the tail is already referring
             # to a Node 
@@ -69,6 +72,7 @@ class LinkedList:
             self.tail.set_next(new_node)
             # 3. reassign self.tail to refer to the new Node 
             self.tail = new_node
+        self.size += 1
 
     def remove_head(self):
         # if we have an empty linked list 
@@ -86,15 +90,17 @@ class LinkedList:
         val = self.head.get_value()
         # set self.head to the Node after the head 
         self.head = self.head.get_next()
+        self.size += 1
         return val
 
     def remove_tail(self):
         # if we have an empty linked list 
         if self.is_empty():
             return
-        if self.tail == None or self.get_max() == 1:
+        if self.tail == None:
             val = self.head.value
             self.remove_head()
+            self.size -= 1
             return val
         # if we have a non-empty linked list 
         # we have to start at the head and move down the linked list 
@@ -109,9 +115,10 @@ class LinkedList:
         val = self.tail.get_value()
         # move self.tail to the Node right before
         if current == self.head:
-            self.tail = None
+            self.tail = None            
         current.set_next(None)
-        self.tail = current            
+        self.tail = current
+        self.size -= 1
         return val
 
     def contains(self, value):
@@ -139,10 +146,10 @@ class LinkedList:
         # reference to our current node as we traverse the list
         current = self.head.get_next()
         # track count        
-        i = 1
+        #i = 1
         # check to see if we're still at a valid list node        
         while current:
-            i += 1
+            #i += 1
             # check to see if the current value is greater than the max_value
             if current.get_value() > max_value:
                 # if so, update our max_value variable
@@ -151,10 +158,10 @@ class LinkedList:
             # update the current node to the next node in the list            
             current = current.get_next()
         #return max_value
-        return i
+        return max_value
 
     def __len__(self):
-        return self.get_max()
+        return self.size
 
 class Stack:
     def __init__(self):
@@ -165,7 +172,7 @@ class Stack:
         return self.storage.is_empty()
 
     def __len__(self):
-        return self.storage.get_max()
+        return self.storage.size
 
     def push(self, value):
         self.storage.add_to_tail(value)
