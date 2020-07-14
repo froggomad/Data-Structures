@@ -33,6 +33,19 @@ class LinkedList:
     def is_empty(self):
         return self.head == None and self.tail == None
 
+    def add_to_head(self, value):
+        new_node = Node(value)
+
+        if self.is_empty():
+            self.head = new_node
+            self.tail = new_node
+        else:
+            #point new_node next to current head node (which points to the next and so on)
+            new_node.set_next(self.head)
+            #change head to the new_node since it points, the list continues
+            self.head = new_node
+
+
     def add_to_tail(self, value):
         # 1. create the Node from the value 
         new_node = Node(value)
@@ -139,6 +152,9 @@ class LinkedList:
             current = current.get_next()
         #return max_value
         return i
+
+    def __len__(self):
+        return self.get_max()
 
 class Stack:
     def __init__(self):
