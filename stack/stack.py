@@ -32,22 +32,20 @@ class LinkedList:
         self.tail = None
 
     def is_empty(self):
-        return self.__len__() == 0
+        return self.size == 0
 
     def add_to_head(self, value):
-        self.size += 1
-
         new_node = Node(value)
 
         if self.is_empty():
-            self.head = new_node
+            self.head = new_node            
             self.tail = new_node
         else:
             #point new_node next to current head node (which points to the next and so on)
-            new_node.set_next(self.head)
+            new_node.set_next(self.head)                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             #change head to the new_node since it points, the list continues
             self.head = new_node
-
+        self.size += 1
 
     def add_to_tail(self, value):        
         # 1. create the Node from the value 
@@ -90,7 +88,7 @@ class LinkedList:
         val = self.head.get_value()
         # set self.head to the Node after the head 
         self.head = self.head.get_next()
-        self.size += 1
+        self.size -= 1
         return val
 
     def remove_tail(self):
@@ -100,7 +98,6 @@ class LinkedList:
         if self.tail == None:
             val = self.head.value
             self.remove_head()
-            self.size -= 1
             return val
         # if we have a non-empty linked list 
         # we have to start at the head and move down the linked list 
@@ -115,8 +112,9 @@ class LinkedList:
         val = self.tail.get_value()
         # move self.tail to the Node right before
         if current == self.head:
-            self.tail = None            
+            self.tail = None
         current.set_next(None)
+        
         self.tail = current
         self.size -= 1
         return val

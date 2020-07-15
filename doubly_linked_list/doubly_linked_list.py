@@ -36,11 +36,14 @@ class DoublyLinkedList:
         if self.head == None:
             self.head = new_node
             self.tail = new_node
+            self.head.next = self.tail
+            self.tail.prev = self.head
         else:
             new_node.next = self.head
             self.head.prev = new_node
             self.head = new_node
-            self.length += 1
+
+        self.length += 1
     """
     Removes the List's current head node, making the
     current head's next node the new head of the List.
@@ -64,13 +67,14 @@ class DoublyLinkedList:
 
         if self.tail == None:
             self.head = new_node            
-            self.tail = self.head
+            self.tail = new_node
 
             self.head.next = self.tail
             self.tail.prev = self.head
         else:
-            new_node.previous = self.tail
+            new_node.prev = self.tail
             self.tail = new_node
+            
             self.length += 1
     """
     Removes the List's current tail node, making the 
@@ -97,6 +101,7 @@ class DoublyLinkedList:
     List and inserts it as the new tail node of the List.
     """
     def move_to_end(self, node):
+        #need to update next and prev references
         self.delete(node)
         self.add_to_tail(node)
 
@@ -105,7 +110,7 @@ class DoublyLinkedList:
     order of the other elements of the List.
     """
     def delete(self, node):
-        prev_node = node.previous
+        prev_node = node.prev
         next_node = node.next
 
         if prev_node is not None:
@@ -113,10 +118,8 @@ class DoublyLinkedList:
         else:
             self.head = next_node
 
-        next_node.previous = prev_node
-
-        if next == None:
-            self.tail = prev_node        
+        if next_node == None:            
+            self.tail = next_node
         
         self.length -= 1
         return node.value
@@ -129,15 +132,11 @@ class DoublyLinkedList:
         pass
 
 dll = DoublyLinkedList()
+dll.add_to_head(2)
+print(dll.tail.value)
+print(dll.tail.prev.value)
+print(dll.head.value)
+print(dll.head.next.value)
 
-node = ListNode(2)
 
-dll.add_to_tail(node)
 
-node_2 = ListNode(3)
-
-dll.add_to_tail(node_2)
-
-print(dll.tail.value.value)
-print(dll.tail.prev.value.value)
-print(dll.head.next.value.value)
