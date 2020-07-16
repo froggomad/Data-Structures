@@ -38,8 +38,9 @@ class DoublyLinkedList:
     as the new head of the list. Don't forget to handle 
     the old head node's previous pointer accordingly.
     """
-    def add_to_head(self, value):
+    def add_to_head(self, value):        
         new_node = ListNode(value)
+        print(f"empty list. adding {new_node.value} to tail")
         if self.head == None:
             self.head = new_node
             self.tail = new_node
@@ -57,11 +58,16 @@ class DoublyLinkedList:
     def remove_from_head(self):
         if self.is_empty():
             return
+        
         node = self.head
-        self.head = self.head.next
-        #note, I don't see why this check is necessary, but test is failing on line 29
-        if self.head:            
-            self.head.prev = None
+        if self.__len__() == 1:
+            self.head = None
+            self.tail = None
+            self.length -= 1
+            return  node.value
+        
+        self.head = self.head.next                
+        self.head.prev = None
 
         self.length -= 1
         return node.value
@@ -75,7 +81,7 @@ class DoublyLinkedList:
         new_node = ListNode(value)
         
         if self.is_empty():
-            print(f"empty list. adding {new_node.value}")
+            print(f"empty list. adding {new_node.value} to tail")
             self.head = new_node
             self.tail = self.head
         else:
@@ -83,7 +89,7 @@ class DoublyLinkedList:
             new_node.prev = self.tail
             self.tail.next = new_node
             self.tail = new_node
-            print(self.tail.prev.value)
+            print(f"tail.prev is head {self.tail.prev == self.head}")
             
         self.length += 1
     """
@@ -111,8 +117,9 @@ class DoublyLinkedList:
     List and inserts it as the new head node of the List.
     """
     def move_to_front(self, node):
+        temp = node
         self.delete(node)
-        self.add_to_head(node)
+        self.add_to_head(temp.value)
         
     """
     Removes the input node from its current spot in the 
@@ -123,13 +130,14 @@ class DoublyLinkedList:
             return
 
         elif node is self.head:
-            if node.next is not None:                
-                self.add_to_tail(node)
+            if node.next is not None:
+                self.add_to_tail(node.value)
+                self.delete(node)
                 self.move_to_front(node.next)
             return
 
         self.delete(node)
-        self.add_to_tail(node)
+        self.add_to_tail(node.value)
 
     """
     Deletes the input node from the List, preserving the 
@@ -142,17 +150,37 @@ class DoublyLinkedList:
         prev_node = node.prev
         next_node = node.next
 
-        # if the previous node exists, assign next_node to its next
-        if prev_node is not None:
-            prev_node.next_node = next_node
-        # otherwise, we must be dealing with the head, so replace the head with the next node 
+        if self.__len__() == 1:
+            self.head = None
+            self.tail = None
+        
+        elif node == self.head:
+            self.head = next_node
+            self.head.prev = None
+
+        elif node == self.tail:
+            self.tail = prev_node
+            self.tail.next = None
+            
         else:
-            if next_node is not None:
-                self.head = next_node
-            # if next_node is none and prev node is not none, we must have just deleted the head, and there are no other nodes
-            else:
-                self.head = None
-                self.tail = None
+            prev_node.next = next_node
+            
+
+        # # if the previous node exists, assign next_node to its next
+        # if prev_node is not None and next_node is not None:
+        #     prev_node.next_node = next_node
+        # # if next_node is none, we are deleting the tail
+        # if next_node == None:
+        #         self.head = prev_node
+        #         self.tail = self.head
+        # # otherwise, we must be dealing with the head, so replace the head with the next node 
+        # else:
+        #     if next_node is not None:
+        #         self.head = next_node
+        #     # if next_node is none and prev node is not none, we must have just deleted the head, and there are no other nodes
+        #     else:
+        #         self.head = None
+        #         self.tail = None
         
         self.length -= 1
         return node.value
@@ -176,13 +204,16 @@ class DoublyLinkedList:
         print(f"new max: {max_value}")
 
         if self.tail.get_value() > max_value:
-            print(self.tail.get_value())
+            print(f"new max: {self.tail.value}")
             return self.tail.value
         return max_value
 
 dll = DoublyLinkedList()
 dll.add_to_head(1)
-dll.add_to_head(2)
+dll.add_to_tail(5)
+dll.add_to_tail(6)
+dll.delete(dll.head)
 dll.delete(dll.tail)
-print(dll.head.value)
+print(f"head (should be 5): {dll.head.value}")
+print(f"tail (should be 5): {dll.tail.value}")
 dll.get_max()
