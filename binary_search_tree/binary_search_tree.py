@@ -9,6 +9,11 @@ This part of the project comprises two days:
 2. Implement the `in_order_print`, `bft_print`, and `dft_print` methods
    on the BSTNode class.
 """
+from sys import path
+path.append("stack")
+
+from stack import Stack
+
 class BSTNode:
     def __init__(self, value):
         self.value = value
@@ -33,6 +38,7 @@ class BSTNode:
             # and park it
             # otherwise there is a child
             # call the right child's insert method
+
         if value < self.value:
 
             if self.left is None:
@@ -44,11 +50,11 @@ class BSTNode:
             if self.right is None:
                 self.right = BSTNode(value)
             else:
-                self.right.insert(value)
+                self.right.insert(value)        
 
     # Return True if the tree contains the value
     # False if it does not
-    def contains(self, target):
+    def contains(self, target):    
 
         if target == self.value:
             return True
@@ -75,7 +81,7 @@ class BSTNode:
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
-        
+
         fn(self.value)
 
         if self.left:
@@ -83,23 +89,62 @@ class BSTNode:
 
         if self.right:
             self.right.for_each(fn)
+    
+    # can be recursive
+    def iterative_depth_first_for_each(self, fn):
+        # using a stack (LIFO or Right-To-Left)
+        stack = []
+        stack.append(self)
+
+        while len(stack) > 0:
+            current = stack.pop()
+            fn(current.value)
+
+            if current.right:
+                stack.append(current.right)
+
+            if current.left:
+                stack.append(current.left)
+
+    def iterative_breadth_first_for_each(self, fn):        
+        from collections import deque
+
+        # using a queue (FIFO Left-To-Right)
+        queue = deque()
+        queue.append(self)
+
+        while len(queue) > 0:            
+            current = queue.popleft()
+            fn(current.value)
+
+            if current.left:
+                queue.append(current.left)
+
+            if current.right:
+                queue.append(current.right)
+
+        
 
     # Part 2 -----------------------
 
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self, node):
-        pass
+        if node:            
+            self.in_order_print(node.left)
+            print(node.value)
+            self.in_order_print(node.right)
+            
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self, node):
-        pass
+        print(node.iterative_breadth_first_for_each(lambda x: print(f"{x}")))
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
     def dft_print(self, node):
-        pass
+        print(node.iterative_depth_first_for_each(lambda x: print(f"{x}")))
 
     # Stretch Goals -------------------------
     # Note: Research may be required
@@ -111,4 +156,5 @@ class BSTNode:
     # Print Post-order recursive DFT
     def post_order_dft(self, node):
         pass
+
 
